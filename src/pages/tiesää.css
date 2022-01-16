@@ -1,0 +1,22 @@
+.title{
+    margin-bottom: 6px;
+}
+
+.tiesääasema .title{
+    margin-bottom: 0;
+}
+
+.tiesääasema .updated{
+    margin: 2px;
+    margin-top: 0;
+    font-size: smaller;
+    color: grey;
+}
+
+.link.text{
+    color: black;
+}
+
+.link.text:hover{
+    color: rgb(100, 100, 100);
+}
