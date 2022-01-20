@@ -1,0 +1,7 @@
+.leaflet-container{
+    margin: auto;
+    width: 97vw;
+    height: 90vh;
+}
+
+.markercluster-map { height: 90vh; }

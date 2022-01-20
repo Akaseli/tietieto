@@ -5,7 +5,8 @@ import { PageNotFoundPage } from './404';
 import "./tiesää.css"
 
 interface Props {
-
+    id?: number,
+    isDisplay?: boolean
 }
 
 interface SensorData{
@@ -18,11 +19,13 @@ interface SensorData{
 
 interface WeatherData{
     error?: boolean,
+    errorDesc?: string,
+    errorReturnLink?: boolean,
     updated: string,
     sensors: SensorData[]
 }
 
-export const TieSääAsema: React.FC<Props> = () => {
+export const TieSääAsema: React.FC<Props> = ({id, isDisplay}) => {
     const url = useParams();
     const stationId = url.stationId;
 
@@ -30,7 +33,20 @@ export const TieSääAsema: React.FC<Props> = () => {
 
     //Hankkii sääaseman tiedot kerran
     useEffect(() =>{
-        axios.get("https://tie.digitraffic.fi/api/v1/data/weather-data/" + stationId)
+        let url  = "https://tie.digitraffic.fi/api/v1/data/weather-data/" + id
+        if(!isDisplay){
+            document.title = "Tietieto | Tiesääasema " + stationId
+            url= "https://tie.digitraffic.fi/api/v1/data/weather-data/" + stationId
+        }
+        if(isDisplay){
+            if(id === undefined || id === 0){
+                var eDate = new Date()
+                setData({error: true, errorDesc: "Sääasemaa ei määritetty.", errorReturnLink:false, updated: eDate.toLocaleString(), sensors:[]})
+                return
+            }
+        }
+       
+        axios.get(url)
             .then((response) =>{
                 var localTime = new Date(response.data.weatherStations[0].measuredTime);
                 
@@ -61,31 +77,31 @@ export const TieSääAsema: React.FC<Props> = () => {
         switch (sensor.id){
             case 1:
                 return(
-                    <p>{"Ilman lämpötila : " + sensor.value + sensor.unit}</p>
+                    <p key={index}>{"Ilman lämpötila : " + sensor.value + sensor.unit}</p>
                 );
             case 3:
                 return(
-                    <p>{"Tien lämpötila : " + sensor.value + sensor.unit}</p>
+                    <p key={index}>{"Tien lämpötila : " + sensor.value + sensor.unit}</p>
                 );
             case 16:
                 return(
-                    <p>{"Tuulen keskinopeus : " + sensor.value + sensor.unit}</p>
+                    <p key={index}>{"Tuulen keskinopeus : " + sensor.value + sensor.unit}</p>
                 );
             case 18:
                 return(
-                    <p>{"Tuulen suunta : " + sensor.value + sensor.unit}</p>
+                    <p key={index}>{"Tuulen suunta : " + sensor.value + sensor.unit}</p>
                 );
             case 21:
                 return(
-                    <p>{"Ilman kosteus : " + sensor.value + sensor.unit}</p>
+                    <p key={index}>{"Ilman kosteus : " + sensor.value + sensor.unit}</p>
                 );
             case 26:
                 return(
-                    <p>{"Näkyvyys : " + sensor.value + sensor.unit}</p>
+                    <p key={index}>{"Näkyvyys : " + sensor.value + sensor.unit}</p>
                 );
             case 27:
                 return(
-                    <p>{"Keli : " + sensor.descriptionFin}</p>
+                    <p key={index}>{"Keli : " + sensor.descriptionFin}</p>
                 );
        
 
@@ -95,7 +111,7 @@ export const TieSääAsema: React.FC<Props> = () => {
     });
 
     //Error
-    if(weatherData?.error) return <PageNotFoundPage error='Sääasemaa ei löydetty!'/>
+    if(weatherData?.error) return <PageNotFoundPage error={weatherData?.errorDesc ?? "Sääasemaa ei löydetty!"} showLink={weatherData.errorReturnLink}/>
 
     //Normal
     return (

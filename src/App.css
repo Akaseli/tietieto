@@ -32,6 +32,7 @@ body{
 .link.button{
     text-decoration: none;
     color: black;
+    transition: background-color 300ms ease-in-out;
 }
 
 .link.button:hover{

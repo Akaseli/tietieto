@@ -21,6 +21,8 @@ export const TieSää: React.FC<Props> = () => {
 
     //Vain kerran sivun ladatessa tekee requestin.
     useEffect(() => {
+        document.title = "Tietieto | Tiesääasemat"
+
         axios.get("https://tie.digitraffic.fi/api/v3/metadata/weather-stations")
         .then((response) => {
             response.data.features.map(function(feature:any, index:number){

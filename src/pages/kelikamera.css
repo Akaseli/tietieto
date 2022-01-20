@@ -1,0 +1,51 @@
+img{
+    width: 70%;
+}
+
+.stationContent{
+    display: inline-flex;
+    gap: 50px;
+}
+
+.kelikamera .title{
+    margin-bottom: 0px;
+}
+
+.kelikamera .updated{
+    margin: 2px;
+    margin-top: 0;
+    font-size: smaller;
+    color: grey;
+}
+
+h4{
+    margin: 10px;
+    margin-left: 0px;
+}
+
+.button.content{
+    border: none;
+    margin: 10px;
+    margin-left: 0px;
+    padding: 10px;
+    background-color: rgb(0, 97, 189);
+    color: white;
+    border-radius: 0.2rem;
+    transition: background-color ease-in-out 300ms;
+}
+
+.button.content:hover{
+    background-color: rgb(3, 108, 206);
+}
+
+@media screen and (max-width: 1000px){
+    .stationContent{
+        display: block;
+    }
+
+    img.kelikamera{
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
