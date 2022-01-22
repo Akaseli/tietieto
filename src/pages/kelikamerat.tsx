@@ -7,7 +7,9 @@ import './map.css'
 
 
 interface Props {
-
+    zoom?: number,
+    lat?: number,
+    lng?: number
 }
 
 interface Coords {
@@ -21,7 +23,7 @@ interface CameraStation {
     roadStationId: number
 }
 
-export const KeliKamerat: React.FC<Props> = () => {
+export const KeliKamerat: React.FC<Props> = ({zoom, lat, lng}) => {
     const [stations, setStations] = useState<CameraStation[]>([])
     
     useEffect(() => {
@@ -49,6 +51,7 @@ export const KeliKamerat: React.FC<Props> = () => {
     const markers = stations.map((station, index) => {
         return (
             <Marker
+                key={index}
                 position={[station.coordinates.lat, station.coordinates.lng]}
                 eventHandlers={{
                     click: (e) => {
@@ -63,7 +66,7 @@ export const KeliKamerat: React.FC<Props> = () => {
 
     return (
         <div>
-            <MapContainer center={[64, 26]} zoom={5} scrollWheelZoom={true}>
+            <MapContainer center={[lat ?? 64, lng ?? 26]} zoom={zoom ?? 5} scrollWheelZoom={true}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

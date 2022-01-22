@@ -3,6 +3,7 @@ import { Routes, Route} from "react-router-dom"
 import './App.css';
 import { AppBar } from './components/AppBar';
 import { PageNotFoundPage } from './pages/404'
+import { Ajoneuvot } from './pages/ajoneuvot';
 import { Etusivu } from './pages/etusivu';
 import { KeliKamera } from './pages/kelikamera';
 import { KeliKamerat } from './pages/kelikamerat';
@@ -20,6 +21,7 @@ function App() {
               <Route path="/tiesaa/:stationId" element={<TieSääAsema/>}/>
             <Route path="/kelikamerat" element={<KeliKamerat/>}/>
               <Route path="/kelikamerat/:stationId" element={<KeliKamera/>}/>
+            <Route path="/ajoneuvot" element={<Ajoneuvot />}/>
             <Route path="*" element={<PageNotFoundPage error='Sivua ei löydetty!'/>} />
         </Routes>
       </div>

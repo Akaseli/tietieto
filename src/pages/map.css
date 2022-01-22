@@ -5,3 +5,11 @@
 }
 
 .markercluster-map { height: 90vh; }
+
+.popup p{
+    margin: 0;
+}
+
+.popup h4{
+    margin-bottom: 0;
+}

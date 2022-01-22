@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import "./kelikamera.css"
 import { TieSääAsema } from './tiesääasema';
 
@@ -49,7 +49,9 @@ export const KeliKamera: React.FC<Props> = () => {
 
     const buttons = cameraPreset.map((preset, index) =>{
         return(
-            <button className='button content'
+            <button
+                key={index}
+                className='button content'
                 onClick={() => {setPreset(index)}}
             >{preset.presentationName}</button>    
         );
@@ -57,6 +59,7 @@ export const KeliKamera: React.FC<Props> = () => {
 
      return(
          <div className='kelikamera'>
+             <Link to={"/kelikamerat"}>Takaisin</Link>
              <h2 className='title'>{"Kelikamera " + stationId}</h2>
              <p className='updated'>{"Päivitetty : " + new Date(cameraPreset[preset].measuredTime).toLocaleString()}</p>
              {buttons}
