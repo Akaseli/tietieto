@@ -13,6 +13,44 @@
     color: grey;
 }
 
+.stations .link{
+    display: block;
+}
+
+.stations{
+    display: block;
+    padding-left: 10px;
+}
+
+
+.stations:last-child{
+    padding-bottom: 10px;
+}
+
+
+.provinces{
+    display: grid;
+    gap: 15px;
+}
+
+.province{
+    margin-top: 0px;
+    margin-bottom: 0px;
+    background-color: rgb(252, 252, 252);
+    padding: 0px;
+    border-radius: 5px;
+    box-shadow: 4px 4px 6px rgb(95, 94, 94);
+
+}
+
+.province h2{
+    cursor: pointer;
+    padding: 10px;
+    padding-left: 10px;
+    margin-bottom: auto;
+    margin-top: auto;
+}
+
 .link.text{
     color: black;
 }

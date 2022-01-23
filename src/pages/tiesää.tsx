@@ -5,8 +5,13 @@ import "./tiesää.css"
 
 interface WeatherStationData {
     id: number,
-    province: String,
+    province: string,
+    displayName: string
+}
 
+interface Provinces{
+    name: string,
+    extended: boolean
 }
 
 interface Props {
@@ -15,30 +20,53 @@ interface Props {
 
 export const TieSää: React.FC<Props> = () => {
     
-    const [weatherStations, setValue] = useState<WeatherStationData[]>([])
-
-    const weatherStationRequest:WeatherStationData[] = []
-
+    const [provinceStations, setProvinceStations] = useState<WeatherStationData[][]>([]);
+    const [provinces, setProvinces] = useState<Provinces[]>([]);
+    
     //Vain kerran sivun ladatessa tekee requestin.
     useEffect(() => {
+        let provinceWeatherStations:WeatherStationData[][] = [];
+        let allWeatherStations:WeatherStationData[] = [];
+        let provinces:Provinces[] = [];
+
         document.title = "Tietieto | Tiesääasemat"
 
         axios.get("https://tie.digitraffic.fi/api/v3/metadata/weather-stations")
         .then((response) => {
-            response.data.features.map(function(feature:any, index:number){
-                weatherStationRequest.push({id: feature.id, province: feature.properties.province});
+            response.data.features.map((feature:any, index:number) => {
+                provinces[feature.properties.provinceCode - 1] = {name: feature.properties.province, extended: false};
+                allWeatherStations.push({id: feature.id, province: feature.properties.province, displayName: feature.properties.names.fi});
             });
         })
-        //Pakottaa sivun uudelleen renderöimään
         .then(() =>{
-            setValue(weatherStationRequest);
+            provinces.forEach((province, index) => {
+                provinceWeatherStations[index]  = allWeatherStations.filter((station) => station.province === province.name)
+            });
+            
+            setProvinces(provinces);
+            setProvinceStations(provinceWeatherStations);
         });
     }, []);
     
-    const weatherStationList = weatherStations.map((station, index) =>{
+    const weatherStationList = provinceStations.map((province, index) =>{
+        let extended = false;
+
+        let stations = province.map((station, index) => {
+            return (
+                <Link key={station.id} className='link text'to={"/tiesaa/" + station.id}>{station.displayName}</Link>
+            );
+        })
+
         return(
-            <div key={station.id}>
-                <Link className='link text' to={"/tiesaa/" + station.id}>{station.id + ", " + station.province}</Link>
+            <div className='province' key={index}>
+                <h2 onClick={() => {
+                    let provinceCopy = provinces.slice();
+                    provinceCopy[index].extended = !provinceCopy[index].extended;
+                    setProvinces(provinceCopy)
+                }}>{provinces[index].name}</h2>
+                <div className='stations' style={provinces[index].extended ? {display: "block"} : {display: "none"}}>
+                    {stations}
+                </div>
             </div>
         );
     })
@@ -46,7 +74,9 @@ export const TieSää: React.FC<Props> = () => {
      return(
          <div>
              <h2 className='title'>Tiesääasemat</h2>
-             {weatherStationList}
+             <div className='provinces'>
+                {weatherStationList}
+             </div>
          </div>
      );
 }
