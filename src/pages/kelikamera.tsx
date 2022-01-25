@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import "./kelikamera.css"
 import { TieSääAsema } from './tiesääasema';
 
@@ -15,6 +15,10 @@ interface CameraPreset{
     measuredTime: string
 }
 
+interface State{
+    name?: string
+}
+
 export const KeliKamera: React.FC<Props> = () => {
     const [preset, setPreset] = useState(0);
     const [cameraPreset, setCameraPresets] = useState<CameraPreset[]>([]);
@@ -22,6 +26,10 @@ export const KeliKamera: React.FC<Props> = () => {
 
     const url = useParams();
     const stationId = url.stationId;
+
+    const location = useLocation();
+
+    const name = (location.state as State).name;
 
     useEffect(() => {
         const tempPresets:CameraPreset[] = []
@@ -60,7 +68,7 @@ export const KeliKamera: React.FC<Props> = () => {
      return(
          <div className='kelikamera'>
              <Link to={"/kelikamerat"}>Takaisin</Link>
-             <h2 className='title'>{"Kelikamera " + stationId}</h2>
+             <h2 className='title'>{"Kelikamera " + name ?? stationId}</h2>
              <p className='updated'>{"Päivitetty : " + new Date(cameraPreset[preset].measuredTime).toLocaleString()}</p>
              {buttons}
              <h4>{cameraPreset[preset].presentationName}</h4>

@@ -1,8 +1,9 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import { useNavigate } from 'react-router-dom';
+import { MapMarker } from '../components/MapMarker';
 import './map.css'
 
 
@@ -21,6 +22,7 @@ interface CameraStation {
     id: number,
     coordinates: Coords,
     roadStationId: number
+    name: string
 }
 
 export const KeliKamerat: React.FC<Props> = ({zoom, lat, lng}) => {
@@ -37,7 +39,8 @@ export const KeliKamerat: React.FC<Props> = ({zoom, lat, lng}) => {
                     stations.push({
                         id: feature.properties.id,
                         coordinates: { lat: feature.geometry.coordinates[1], lng: feature.geometry.coordinates[0] },
-                        roadStationId: feature.properties.roadStationId
+                        roadStationId: feature.properties.roadStationId,
+                        name: feature.properties.names.fi
                     });
                 })
 
@@ -50,15 +53,7 @@ export const KeliKamerat: React.FC<Props> = ({zoom, lat, lng}) => {
 
     const markers = stations.map((station, index) => {
         return (
-            <Marker
-                key={index}
-                position={[station.coordinates.lat, station.coordinates.lng]}
-                eventHandlers={{
-                    click: (e) => {
-                        navigate("/kelikamerat/" + station.id)
-                    },
-                }}   
-            />
+            <MapMarker key={index} id={station.id} lat={station.coordinates.lat} lng={station.coordinates.lng} displayName={station.name}/>
         );
     })
 

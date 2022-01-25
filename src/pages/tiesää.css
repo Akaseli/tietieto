@@ -39,11 +39,11 @@
     background-color: rgb(252, 252, 252);
     padding: 0px;
     border-radius: 5px;
-    box-shadow: 4px 4px 6px rgb(95, 94, 94);
+    box-shadow: 4px 4px 8px rgb(206, 206, 206);
 
 }
 
-.province h2{
+.province h4{
     cursor: pointer;
     padding: 10px;
     padding-left: 10px;

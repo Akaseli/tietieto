@@ -104,7 +104,6 @@ export const Ajoneuvot: React.FC<Props> = () => {
 
     //Muut päivitykset
     useEffect(() => {
-        console.log("Run")
         if(!activeVehicle) return;
         
         drawRoute(activeVehicle);

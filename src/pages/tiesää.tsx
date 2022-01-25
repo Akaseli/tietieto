@@ -53,17 +53,17 @@ export const TieSää: React.FC<Props> = () => {
 
         let stations = province.map((station, index) => {
             return (
-                <Link key={station.id} className='link text'to={"/tiesaa/" + station.id}>{station.displayName}</Link>
+                <Link key={station.id} className='link text'to={"/tiesaa/" + station.id} state={{title: station.displayName}}>{station.displayName}</Link>
             );
         })
 
         return(
             <div className='province' key={index}>
-                <h2 onClick={() => {
+                <h4 onClick={() => {
                     let provinceCopy = provinces.slice();
                     provinceCopy[index].extended = !provinceCopy[index].extended;
                     setProvinces(provinceCopy)
-                }}>{provinces[index].name}</h2>
+                }}>{provinces[index].name}</h4>
                 <div className='stations' style={provinces[index].extended ? {display: "block"} : {display: "none"}}>
                     {stations}
                 </div>

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { PageNotFoundPage } from './404';
 import "./tiesää.css"
 
@@ -17,6 +17,10 @@ interface SensorData{
     descriptionFin?: string
 }
 
+interface LocationState{
+    title?: string
+}
+
 interface WeatherData{
     error?: boolean,
     errorDesc?: string,
@@ -28,6 +32,10 @@ interface WeatherData{
 export const TieSääAsema: React.FC<Props> = ({id, isDisplay}) => {
     const url = useParams();
     const stationId = url.stationId;
+
+    const location = useLocation();
+
+    const title = (location.state as LocationState)?.title
 
     const [weatherData, setData] = useState<WeatherData>();
 
@@ -113,10 +121,14 @@ export const TieSääAsema: React.FC<Props> = ({id, isDisplay}) => {
     //Error
     if(weatherData?.error) return <PageNotFoundPage error={weatherData?.errorDesc ?? "Sääasemaa ei löydetty!"} showLink={weatherData.errorReturnLink}/>
 
+    let displayName = stationId;
+
+    if(title != undefined) displayName = title;
+
     //Normal
     return (
         <div className='tiesääasema'>
-            <h2 className='title'>{"Tiesääasema " + stationId}</h2>
+            <h2 className='title'>{"Tiesääasema " + displayName}</h2>
             <p className='updated'>{"Päivitetty : " + weatherData?.updated}</p>
             {sensorList}
         </div>
