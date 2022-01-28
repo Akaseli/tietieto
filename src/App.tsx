@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Routes, Route} from "react-router-dom"
 import './App.css';
 import { AppBar } from './components/AppBar';
+import { SideBar } from './components/SideBar';
 import { PageNotFoundPage } from './pages/404'
 import { Ajoneuvot } from './pages/ajoneuvot';
 import { Etusivu } from './pages/etusivu';
@@ -14,6 +15,7 @@ function App() {
   return (
     <div>
       <AppBar />
+      <SideBar />
       <div className='content'>
         <Routes>
           <Route path="/" element={<Etusivu/>} />

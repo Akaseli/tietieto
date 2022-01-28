@@ -10,10 +10,10 @@ export const AppBar: React.FC<Props> = () => {
      return(
          <div className='AppBar'>
             <ul>
-                <li><Link className='link button' to={"/"}>Etusivu</Link></li>
-                <li><Link className='link button' to={"/ajoneuvot"}>Ajoneuvot</Link></li>
-                <li><Link className='link button' to={"/kelikamerat"}>Kelikamerat</Link></li>
-                <li><Link className='link button' to={"/tiesaa"}>Tiesääasemat</Link></li>
+                <li className='wide'><Link className='link button' to={"/"}>Etusivu</Link></li>
+                <li className='wide'><Link className='link button' to={"/ajoneuvot"}>Ajoneuvot</Link></li>
+                <li className='wide'><Link className='link button' to={"/kelikamerat"}>Kelikamerat</Link></li>
+                <li className='wide'><Link className='link button' to={"/tiesaa"}>Tiesääasemat</Link></li>
             </ul>
          </div>
      );
