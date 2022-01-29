@@ -6,7 +6,7 @@ body{
     margin-top: 65px;
 }
 
-@media screen and (max-width: 440px){
+@media screen and (max-width: 445px){
     .AppBar li.wide{
         display: none;
     }

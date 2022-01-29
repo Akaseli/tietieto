@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
-import "./SideBar.css"
+import "./SideBar.css";
+
+import menuSvg from "../svg/menu.svg"
+import closeSvg from "../svg/close.svg"
 
 interface Props {
 
@@ -12,18 +15,18 @@ export const SideBar: React.FC<Props> = () => {
 
     const style = visibility? {display: "block"} : {display: "none"}
 
+    const shade = visibility? <div onClick={() => changeVisibility(!visibility)} className='shade'></div> : <div></div>
+
      return(
          <div>
             <div className='topbar'>
-                <p onClick={() => {
-                    changeVisibility(!visibility);
-                }}>Valikko</p>
+                <img onClick={() => changeVisibility(!visibility)}src={menuSvg}></img>
             </div>
+            
+            {shade}
 
             <div className='sidebar' style={style}>
-                <p onClick={() => {
-                    changeVisibility(!visibility);
-                }}>Sulje</p>
+                <img onClick={() => changeVisibility(!visibility)} src={closeSvg}></img>
 
                 <ul>
                     <li onClick={() => changeVisibility(!visibility)}><Link className='link button' to={"/"}>Etusivu</Link></li>
@@ -31,6 +34,7 @@ export const SideBar: React.FC<Props> = () => {
                     <li onClick={() => changeVisibility(!visibility)}><Link className='link button' to={"/kelikamerat"}>Kelikamerat</Link></li>
                     <li onClick={() => changeVisibility(!visibility)}><Link className='link button' to={"/tiesaa"}>Tiesääasemat</Link></li>
                 </ul>
+
             </div>
          </div>
      );
