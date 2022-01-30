@@ -12,9 +12,6 @@ interface Props {
 export const SideBar: React.FC<Props> = () => {
     const [visibility, changeVisibility] = useState(false);
 
-
-    const style = visibility? {display: "block"} : {display: "none"}
-
     const shade = visibility? <div onClick={() => changeVisibility(!visibility)} className='shade'></div> : <div></div>
 
      return(
@@ -25,7 +22,7 @@ export const SideBar: React.FC<Props> = () => {
             
             {shade}
 
-            <div className='sidebar' style={style}>
+            <div className={visibility? "sidebar visible" : "sidebar"}>
                 <img onClick={() => changeVisibility(!visibility)} src={closeSvg}></img>
 
                 <ul>

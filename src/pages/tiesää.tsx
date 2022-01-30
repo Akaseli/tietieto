@@ -64,7 +64,7 @@ export const TieSää: React.FC<Props> = () => {
                     provinceCopy[index].extended = !provinceCopy[index].extended;
                     setProvinces(provinceCopy)
                 }}>{provinces[index].name}</h4>
-                <div className='stations' style={provinces[index].extended ? {display: "block"} : {display: "none"}}>
+                <div className={provinces[index].extended? "stations expanded" : "stations"}>
                     {stations}
                 </div>
             </div>

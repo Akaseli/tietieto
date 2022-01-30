@@ -19,11 +19,21 @@
 
 .stations{
     display: block;
+    max-height: 0px;
     padding-left: 10px;
+    overflow: hidden;
+    transition: 300ms;
+}
+
+.stations.expanded{
+    display: block;
+    max-height: 1000vmax;
+    
+    transition: 450ms;
 }
 
 
-.stations:last-child{
+.stations.expanded:last-child{
     padding-bottom: 10px;
 }
 
