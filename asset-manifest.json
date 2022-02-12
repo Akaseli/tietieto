@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/tietieto/static/css/main.56de0d55.css",
-    "main.js": "/tietieto/static/js/main.b0eeeb03.js",
+    "main.js": "/tietieto/static/js/main.32badf7a.js",
     "static/media/C0252003.jpg": "/tietieto/static/media/C0252003.fd45e43966c6ee09fda8.jpg",
     "static/media/C1450807.jpg": "/tietieto/static/media/C1450807.dea3c817025edff73b45.jpg",
     "static/media/ajoneuvot.png": "/tietieto/static/media/ajoneuvot.104238a433e812ea6483.png",
@@ -9,10 +9,10 @@
     "index.html": "/tietieto/index.html",
     "static/media/close.svg": "/tietieto/static/media/close.43acac53cb85a6489dbf8cf3109f8021.svg",
     "main.56de0d55.css.map": "/tietieto/static/css/main.56de0d55.css.map",
-    "main.b0eeeb03.js.map": "/tietieto/static/js/main.b0eeeb03.js.map"
+    "main.32badf7a.js.map": "/tietieto/static/js/main.32badf7a.js.map"
   },
   "entrypoints": [
     "static/css/main.56de0d55.css",
-    "static/js/main.b0eeeb03.js"
+    "static/js/main.32badf7a.js"
   ]
 }
