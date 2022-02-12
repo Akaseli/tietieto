@@ -31,25 +31,19 @@ export const KeliKamerat: React.FC<Props> = ({zoom, lat, lng}) => {
     useEffect(() => {
         document.title = "Tietieto | Kelikamerat"
 
-        let stations: CameraStation[] = [];
         //Requesti kelikameroiden sijanneista
         axios.get("https://tie.digitraffic.fi/api/v3/metadata/camera-stations")
             .then((response) => {
-                response.data.features.map((feature: any, index: number) => {
-                    stations.push({
+                setStations(response.data.features.map((feature: any, index: number) => {
+                    return{
                         id: feature.properties.id,
                         coordinates: { lat: feature.geometry.coordinates[1], lng: feature.geometry.coordinates[0] },
                         roadStationId: feature.properties.roadStationId,
                         name: feature.properties.names.fi
-                    });
-                })
-
-                setStations(stations)
-            })
-
+                    };
+                }));
+            });
     }, [])
-
-    let navigate = useNavigate();
 
     const markers = stations.map((station, index) => {
         return (

@@ -2,11 +2,10 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-markercluster';
-import { useNavigate } from 'react-router-dom';
 import * as Paho from "paho-mqtt"
 
 import './map.css'
-import {getTaskColor} from '../polylineColors'
+import { getTaskColor } from '../polylineColors'
 import { LatLngExpression } from 'leaflet';
 
 
@@ -29,7 +28,7 @@ interface TasksMeanings {
     nameSV: string,
 }
 
-interface PolyLine{
+interface PolyLine {
     coords: LatLngExpression[],
     color: string
 }
@@ -37,8 +36,11 @@ interface PolyLine{
 export const Ajoneuvot: React.FC<Props> = () => {
     const [vehicles, setVehicles] = useState<Vehicle[]>([])
 
-    var vehicleTemp: Vehicle[] = [];
+    let vehicleTemp: Vehicle[] = [];
+
     const [taskMeanings, setTaskMeanings] = useState<TasksMeanings[]>([]);
+
+    const [connectionState, setConnection] = useState(false);
 
     //https://www.digitraffic.fi/tieliikenne/#websocket-rajapinnat
     const client = new Paho.Client("tie.digitraffic.fi", 61619, "tietieto")
@@ -46,6 +48,7 @@ export const Ajoneuvot: React.FC<Props> = () => {
     function connect() {
         client.onConnectionLost = function (response) {
             console.info(Date.now() + ' Connection lost:' + response.errorMessage);
+            setConnection(false);
         };
 
         client.onMessageArrived = function (message) {
@@ -57,12 +60,14 @@ export const Ajoneuvot: React.FC<Props> = () => {
 
     function onConnect() {
         console.info("Yhteys avattu");
+        setConnection(true);
         client.subscribe("maintenance/tracking/#");
-    }
 
+    }
 
     //Sivun ladatessa
     useEffect(() => {
+        console.log(client.isConnected())
         document.title = "Tietieto | Ajoneuvot"
 
         //Hanki tehtävien kuvaukset
@@ -82,7 +87,7 @@ export const Ajoneuvot: React.FC<Props> = () => {
         axios.get("https://tie.digitraffic.fi/api/v3/data/maintenance/trackings/latest")
             .then((response) => {
                 response.data.features.map((feature: any, index: number) => {
-                    vehicleTemp.push({ id: feature.properties.id, tasks: feature.properties.tasks, lat: feature.geometry.coordinates[1], lng: feature.geometry.coordinates[0], time: new Date(feature.properties.time).toLocaleString()})
+                    vehicleTemp.push({ id: feature.properties.id, tasks: feature.properties.tasks, lat: feature.geometry.coordinates[1], lng: feature.geometry.coordinates[0], time: new Date(feature.properties.time).toLocaleString() })
                 });
 
                 setVehicles([...vehicleTemp]);
@@ -95,23 +100,23 @@ export const Ajoneuvot: React.FC<Props> = () => {
 
         return () => {
             if (client.isConnected()) {
-                client.disconnect()
+                client.unsubscribe("maintenance/tracking/#");
+                client.disconnect();
+                setConnection(false);
             }
             console.log("Disconnected")
         }
     }, [])
 
 
-    //Muut päivitykset
+    //Ajoneuvojen reitin päivitys
     useEffect(() => {
-        if(!activeVehicle) return;
-        
+        if (!activeVehicle) return;
+
         drawRoute(activeVehicle);
     }, [vehicles])
 
 
-
-    
     //WS Data käsittely
     function handleResponse(message: any) {
 
@@ -142,22 +147,22 @@ export const Ajoneuvot: React.FC<Props> = () => {
     }
 
 
-    const [polyline, setLine] = useState<PolyLine>({coords:[[0, 0]], color:"#FFFFFF"});
+    const [polyline, setLine] = useState<PolyLine>({ coords: [[0, 0]], color: "#FFFFFF" });
     const [activeVehicle, setActiveVehicle] = useState<Vehicle>();
 
 
     //Yhden ajoneuvon reitti
-    function drawRoute(vehicle:Vehicle){
-        let tempLine:LatLngExpression[] = [];
+    function drawRoute(vehicle: Vehicle) {
+        let tempLine: LatLngExpression[] = [];
         axios.get("https://tie.digitraffic.fi/api/v3/data/maintenance/trackings/" + vehicle.id)
-        .then((response) => {
-            if(response.data.geometry.type === "LineString"){
-                response.data.geometry.coordinates.map((coordinates:any, index:number) => {
-                    tempLine.push([coordinates[1], coordinates[0]])
-                });
-            }
-            setLine({color: getTaskColor(vehicle.tasks[0]), coords:tempLine})
-        });
+            .then((response) => {
+                if (response.data.geometry.type === "LineString") {
+                    response.data.geometry.coordinates.map((coordinates: any, index: number) => {
+                        tempLine.push([coordinates[1], coordinates[0]])
+                    });
+                }
+                setLine({ color: getTaskColor(vehicle.tasks[0]), coords: tempLine })
+            });
     }
 
     const markers = vehicles.map((vehicle, index) => {
@@ -189,18 +194,21 @@ export const Ajoneuvot: React.FC<Props> = () => {
 
 
     return (
-        <div className='vehicles'>
-            <MapContainer center={[64, 26]} zoom={5} scrollWheelZoom={true} tap={false}>
-                <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                <Polyline positions={polyline.coords} pathOptions={{color: polyline.color}}></Polyline>
+        <div>
+            <div className='vehicles'>
+                <MapContainer center={[64, 26]} zoom={5} scrollWheelZoom={true} tap={false}>
+                    <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    <Polyline positions={polyline.coords} pathOptions={{ color: polyline.color }}></Polyline>
 
-                <MarkerClusterGroup>
-                    {markers}
-                </MarkerClusterGroup>
-            </MapContainer>
+                    <MarkerClusterGroup>
+                        {markers}
+                    </MarkerClusterGroup>
+                </MapContainer>
+            </div>
         </div>
+
     );
 }

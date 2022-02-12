@@ -32,17 +32,13 @@ export const KeliKamera: React.FC<Props> = () => {
     const name = (location.state as State).name;
 
     useEffect(() => {
-        const tempPresets:CameraPreset[] = []
-
         axios.get("https://tie.digitraffic.fi/api/v1/data/camera-data/" + stationId)
         .then((response) =>{
             setNearestStation(response.data.cameraStations[0].nearestWeatherStationId);
 
-            response.data.cameraStations[0].cameraPresets.map((preset:any, index:number) =>{
-                tempPresets.push({id: preset.id, presentationName: preset.presentationName, imageUrl: preset.imageUrl, measuredTime: preset.measuredTime});
-            });
-
-            setCameraPresets(tempPresets);
+            setCameraPresets(response.data.cameraStations[0].cameraPresets.map((preset:any, index:number) =>{
+                return {id: preset.id, presentationName: preset.presentationName, imageUrl: preset.imageUrl, measuredTime: preset.measuredTime};
+            }));
         })
     }, [])
 

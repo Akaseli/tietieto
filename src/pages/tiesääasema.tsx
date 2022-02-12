@@ -48,17 +48,14 @@ export const TieSääAsema: React.FC<Props> = ({id, isDisplay}) => {
         }
         if(isDisplay){
             if(id === undefined || id === 0){
-                var eDate = new Date()
-                setData({error: true, errorDesc: "Sääasemaa ei määritetty.", errorReturnLink:false, updated: eDate.toLocaleString(), sensors:[]})
+                setData({error: true, errorDesc: "Sääasemaa ei määritetty.", errorReturnLink:false, updated: new Date().toLocaleString(), sensors:[]})
                 return
             }
         }
        
         axios.get(url)
-            .then((response) =>{
-                var localTime = new Date(response.data.weatherStations[0].measuredTime);
-                
-                var timeString = localTime.toLocaleString()
+            .then((response) =>{            
+                let timeString =  new Date(response.data.weatherStations[0].measuredTime).toLocaleString()
 
                 if(response.data.weatherStations[0].measuredTime === null){
                     timeString = "Ei tietoa"
@@ -72,9 +69,7 @@ export const TieSääAsema: React.FC<Props> = ({id, isDisplay}) => {
                 setData({updated: timeString, sensors: sensors})
             })
             .catch((error) => {
-                var eDate = new Date()
-
-                setData({error: true, updated: eDate.toLocaleString(), sensors:[]})
+                setData({error: true, updated: new Date().toLocaleString(), sensors:[]})
             })
 
     }, [])

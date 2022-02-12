@@ -22,35 +22,34 @@ export const TieSää: React.FC<Props> = () => {
     
     const [provinceStations, setProvinceStations] = useState<WeatherStationData[][]>([]);
     const [provinces, setProvinces] = useState<Provinces[]>([]);
+    const [stations, setStations] = useState<WeatherStationData[]>([]);
     
-    //Vain kerran sivun ladatessa tekee requestin.
     useEffect(() => {
-        let provinceWeatherStations:WeatherStationData[][] = [];
-        let allWeatherStations:WeatherStationData[] = [];
-        let provinces:Provinces[] = [];
-
         document.title = "Tietieto | Tiesääasemat"
 
         axios.get("https://tie.digitraffic.fi/api/v3/metadata/weather-stations")
         .then((response) => {
-            response.data.features.map((feature:any, index:number) => {
-                provinces[feature.properties.provinceCode - 1] = {name: feature.properties.province, extended: false};
-                allWeatherStations.push({id: feature.id, province: feature.properties.province, displayName: feature.properties.names.fi});
-            });
+            const provinceNames = Array.from(new Set(response.data.features.map((feature:any, index:number) => {
+                return feature.properties.province
+            })));
+
+            setProvinces(provinceNames.map((name:any) => {
+                return {name: name, extended: false};
+            }));
+
+            setStations(response.data.features.map((feature:any) => {
+                return {id: feature.id, province: feature.properties.province, displayName: feature.properties.names.fi};
+            }));
         })
-        .then(() =>{
-            provinces.forEach((province, index) => {
-                provinceWeatherStations[index]  = allWeatherStations.filter((station) => station.province === province.name)
-            });
-            
-            setProvinces(provinces);
-            setProvinceStations(provinceWeatherStations);
-        });
     }, []);
+
+    useEffect(() => {
+        setProvinceStations(provinces.map((province, index) => {
+            return stations.filter((station) => station.province === province.name)
+        }));
+    }, [provinces])
     
     const weatherStationList = provinceStations.map((province, index) =>{
-        let extended = false;
-
         let stations = province.map((station, index) => {
             return (
                 <Link key={station.id} className='link text'to={"/tiesaa/" + station.id} state={{title: station.displayName}}>{station.displayName}</Link>
